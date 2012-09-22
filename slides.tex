@@ -1,0 +1,391 @@
+%!TEX encoding = UTF-8 Unicode
+
+% Author(s): Daniel Roy
+% Website: danroy.org
+% License: Public Domain
+% I encourage people to build on this idea, while acknowledging earlier contributions.
+
+\documentclass[reqno,oneside,twocolumn,8pt]{amsart}
+\usepackage[utf8]{inputenc} 
+\usepackage{amsmath, amssymb, bm}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\usepackage{natbib}
+\usepackage[colorlinks,citecolor=blue,urlcolor=blue,linkcolor=blue]{hyperref}
+\usepackage{hypernat}
+
+%% this makes the indentation for enumeration and itemize environments more compact
+\usepackage{enumitem}
+\setitemize{itemindent=0pt,leftmargin=15pt}
+\setenumerate{itemindent=0pt,leftmargin=15pt}
+
+%% amsart has ALLCAPS title.  this switches that behavior off.
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@settitle}{\uppercasenonmath\@title}{}{}{}
+%\patchcmd{\@setauthors}{\MakeUppercase}{\sc}{}{}
+%\patchcmd{\@setauthors}{\MakeUppercase}{}{}{}
+%\patchcmd{\section}{\scshape}{}{}{}
+\makeatother
+
+%% not used below, but these are great packages that i encourage you to learn 
+%% over non-free alternatives like OmniGraffle
+\usepackage{tikz}
+\usepackage{tkz-graph}
+
+%% thickness of the bar separating the two columns
+\setlength\columnseprule{.25pt}
+
+%% change the page size to match projector dimensions
+\usepackage[
+	paperwidth=128mm, %% these are Beamer's default dimensions.   
+	paperheight=96mm, %% some newer projectors are more widescreen
+	%includeheadfoot, %% hiding header/footer for more screen space.
+	top=3.5mm, %% these margins can be trimmed further, if necessary.
+	bottom=3.5mm,
+	left=1.75mm,
+	right=1.75mm,
+	headsep=6.5mm,
+	footskip=8.5mm
+	]{geometry}						
+
+%% redefining the look of \section's and \subsection's
+\usepackage{titlesec}  
+\titleformat{\section}[frame]{\normalfont\scshape}{}{0em}{\centerline}[]
+\titlespacing{\section}{0pt}{1.5ex plus .1ex minus .2ex}{0pt}
+\titleformat{\subsection}[runin]{\color{Sepia}\normalfont\bfseries}{}{0em}{}[.---]
+\titlespacing{\subsection}{0pt}{1.0ex plus .1ex minus .2ex}{0pt}
+
+%% defining some theorem environments, with color
+\newtheorem*{thm}{{\color{BrickRed}Thm}}
+\newtheorem*{lem}{{\color{BrickRed}Lem}} 
+\newtheorem*{prop}{{\color{BrickRed}Prop}} 
+\newtheorem*{cor}{{\color{BrickRed}Cor}} 
+\newtheorem*{claim}{{\color{BrickRed}Claim}} 
+\theoremstyle{definition}
+\newtheorem*{definition}{{\color{OliveGreen}Defn}}
+\newtheorem*{conj}{Conj}
+\newtheorem*{exmp}{Ex}
+\theoremstyle{remark}
+\newtheorem*{rem}{Remark} 
+
+%% i redefine the \[ \] math environment to be the align environment
+\def\[#1\]{\begin{align}#1\end{align}}
+
+%% i encourage semantic \commands to separate content/style
+%% i use these below for demonstration purposes
+\newcommand{\defn}[1]{{\bf #1}}
+\newcommand{\nprocess}[3]{(#1_{#3})_{#3 \in #2}}
+\newcommand{\bspace}{\Omega}
+\newcommand{\bsa}{\mathcal A}
+\newcommand{\borelspace}{(\bspace,\bsa)}
+\newcommand{\Measures}{\mathcal M}
+\newcommand{\dist}{\sim}
+\newcommand{\ind}{\mathrel{\perp\mkern-9mu\perp}}
+\newcommand{\Nats}{\mathbb{N}}
+\newcommand{\distiid}{\overset{\textrm{\tiny iid}}{\dist}}\newcommand{\given}{\mid}
+\newcommand{\process}[2]{\nprocess #1 #2 n}
+\newcommand{\thelaw}{}% {\mathcal L}
+\newcommand{\DPLAW}{\mathrm{DP}_{\thelaw}}
+\newcommand{\Dirichlet}{\mathrm{Dirichlet}}
+\newcommand{\Beta}{\mathrm{Beta}}
+\newcommand{\Poisson}{\mathrm{Poisson}}
+\newcommand{\Bernoulli}{\mathrm{Ber}}
+\newcommand{\BPLAW}{\mathrm{BP}_{\thelaw}}
+\newcommand{\BePLAW}{\mathrm{BeP_{\thelaw}}}
+\newcommand{\IBPLAW}{\mathrm{IBP_{\thelaw}}}
+
+\renewcommand{\Pr}{\mathbb{P}}
+\newcommand{\EE}{\mathbb{E}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+\title[\LaTeX\ for Chalk Talks] % if you have a header/footer, this is the short title
+{\LARGE Adapting the \LaTeX\ article document class for mathematical 
+presentations in the style of chalk talks
+}
+
+\author[Daniel Roy]
+{{\huge \bf Daniel M.~Roy}\\University of Cambridge}
+
+\begin{document}
+
+%% title page, in one column
+\onecolumn
+\hrule
+\vspace{4em}
+\maketitle
+\hrule
+\vfill
+\begin{center}
+\sc Some Conference\\Some University\\September 2012
+\end{center}
+
+%% this clears a double column
+\clearpage
+
+%% back to two column
+\twocolumn
+
+\section{the basic idea (not an example use!)}
+
+I created this style file because I do not like typical Power Point style presentations, even those created using Beamer and \LaTeX.  In particular, I reject the ``rule of thumb'': do not place a lot of text on a slide.\footnote{Note that this text is not an example slide itself---please see the latter part of the PDF.} As a result, complex material is spread out across many slides that are often presented either too quickly or too slowly.  When they are most needed, key definitions are commonly out of sight.
+
+In contrast, the classic ``chalk talk'' leaves an enormous amount of information within view at once, and details presented at the beginning of a talk can still be visible towards the end---especially if the speaker is quite skilled. (I suspect the oft-cited slower-speed of chalk talks is also important, but less so.)  Unfortunately, for the near-term at least, our projectors mimic the aspect ratios of TVs, rather than those of walls of blackboards.  (Samsung, listening?)  On the other hand, far less material is typically presented on slides than in the same physical area on a blackboard.  This .tex file represents a step back towards the mechanics/aesthetics of a chalk talk.
+
+The goal is to pack more information onto a slide but then to go through the slide much more slowly.  Ideally a talk might be only a few slides.  My limited experience suggests that this is much harder than one might expect, but I also suspect it's a goal worth pursuing.
+
+With this new approach, rather than organizing the material into slides/frames, one simply prepares an {\tt amsart}icle, in two columns.  This means that you do not have to manually resolve most layout issues one faces in Beamer: \LaTeX\ will automatically flow text from one column to the next, and from one page to the next.  Indeed, slides are simply pages. Double-column figure environments can be used for large graphics, or one can switch to {\tt \textbackslash onecolumn} format for a slide if necessary.  
+
+A key part of the chalk-talk approximation is carried out by the second .tex file {\tt make-horizontal}.  By executing the second file, the slides produced by this file (or, indeed, by any mechanism, suitably renamed) are transformed into a very long single page, containing a horizontal sequence of slides.  This allows the presenter to smoothly scroll between slides, one column at a time, keeping as much previous material in view at once as possible.  As projectors adopt wider aspect ratios, even more material can remain in view.
+
+Some nice aspects of Beamer are missing, and perhaps in the long run, this high level idea will be executed within the Beamer enivornment.  E.g, there is, at present, no way to reveal parts of a slide, one at a time, and no way to, e.g., present animations produced in tikz.  Naive implementations will conflict with the side scrolling mechanism/hack.  I think both of these advances are crucial missing elements.  Indeed, on a dense page, it's that much more important to be able to refer (and point) to parts of the text.  (At the very least, make sure you have a laser pointer.)
+
+This template is my first stab at this idea.  If you make progress, please email me your improvements, and I'll consider passing them on myself.
+
+\newpage 
+\section{urn schemes for hierarchies}
+
+\subsection{Beta processes}
+
+\[
+B &\dist \BPLAW(c, B_0) \\
+B' \given B &\dist \BPLAW(c', B) 
+\]
+\[
+\process X \Nats \given B\hspace{.3em} &\distiid \BePLAW(B) \\
+\process Z \Nats \given B' &\distiid \BePLAW(B')
+\]
+
+\vspace{1em}
+\begin{tikzpicture}[scale=.4]
+%\draw[help lines] (-2,-2) grid (4,2);
+\SetGraphUnit{2}
+\SetVertexMath
+\coordinate (B) at (0,0);
+\Vertex{B} 
+\SO[unit=4](B){B'} 
+\SOEA(B){X_1} 
+\EA(X_1){X_2}
+\EA(X_2){X_3}
+\SOEA(B'){Z_1} 
+\EA(Z_1){Z_2}
+\EA(Z_2){Z_3}
+\SetVertexSimple[MinSize=4pt,LineWidth=0pt,LineColor=white,FillColor=gray]
+\tikzset{VertexStyle/.append style={inner sep=0pt, outer sep=7pt}}
+\SetGraphUnit{1}
+\EA[unit=1.5](X_3){X_4}
+\EA(X_4){X_5}
+\EA(X_5){X_6}
+\EA[unit=1.5](Z_3){Z_4}
+\EA(Z_4){Z_5}
+\EA(Z_5){Z_6}
+
+\SetUpEdge[style={->}]
+\Edges(B,B')
+\SetUpEdge[style={bend left,->}]
+\foreach \v in {X_1,X_2,X_3}{%
+\Edge(B)(\v)};
+\foreach \v in {Z_1,Z_2,Z_3}{%
+\Edge(B')(\v)};
+\Edges[style={bend left,->}](B,X_5)
+\Edges[style={bend left,->}](B',Z_5)
+\end{tikzpicture}
+
+\vspace{1em}
+
+\noindent
+$\process X \Nats$ : Indian Buffet Process \citep{GG05,GG06} 
+(or more precisely, the underlying urn scheme)\newline
+$B'$ : Hierarchical Beta Process \citep{Thibaux2007}\newline
+
+% force new column
+\newpage
+
+\section{Cast and Characters}
+
+\subsection{Bernoulli process} 
+
+a \emph{random set}.
+
+\ \\
+\begin{tabular}{cc}
+%\multirow{4}{*}{\includegraphics[width=.43\linewidth]{attributes}}
+&has Tail \\
+&has Stripes \\
+&has Legs
+\end{tabular}
+
+\ \\
+
+\ \\
+\noindent
+Often convenient to represent sets, say $\{a,b,c\}$, by \emph{simple} measures, $\delta_a+\delta_b+\delta_c$.  
+
+\ \\
+\noindent 
+E.g., If $X_1$ and $X_2$ are two sets represented by simple measures, and if $S = X_1+X_2$, then $S\{a\}$ \emph{counts} the number of $a$'s, and $S\{a,b\}$ counts the number of $a$'s and $b$'s.
+
+\begin{definition}[completely random]
+We say that a random measure $X$ is \defn{completely random} (aka has independent increments)
+when, for every finite collection $A_1,\dotsc, A_k$ of \emph{disjoint} measurable sets, the values $X(A_1), \dotsc, X(A_k)$ are independent.
+\end{definition}
+
+\begin{thm}
+Let $X$ be a random measure on $\borelspace$.
+Then $X$ is a Bernoulli process on $\borelspace$ iff $X$ is a.s.\ simple and completely random.
+\end{thm}
+
+\noindent
+E.g., if $X$ is a Bernoulli process, then
+\[
+X\{\text{has Tail}\} \ind X\{\text{has Stripes}\}
+\]
+
+\begin{cor}
+The distribution of a Bernoulli process $X$ is characterized by its mean $\EE X$.
+\end{cor}
+
+\begin{definition}[hazard measure]
+If $X$ is a Bernoulli process,
+we call $\EE X$ its \defn{hazard measure}.
+\end{definition}
+
+E.g., if $X$ is a Bernoulli process on $\{a,b,c,d\}$ 
+its hazard measure is specified by 4 probabilities
+$p_a,p_b,p_c,p_d \ge 0$.  
+(Note: these don't sum to 1 necessarily!)
+
+\begin{definition}[notation]
+If $X$ is a Bernoulli process and $B = \EE X$, we
+will write $X \dist \BePLAW(B)$.
+\end{definition}
+
+\begin{cor}
+If $X \dist \BePLAW(B)$ 
+and its hazard measure $B$ is continuous, then $X$ is a Poisson process.
+\end{cor}
+
+\subsection{Feature-based clustering} 
+Many authors have used Bernoulli processes to model latent features of objects and to explain data (whether sequences, arrays, networks, graphs, etc.)~via probability kernels (likelihoods) from the space of sets features.
+
+\noindent
+{\bf Model for hazard B?} Beta process!
+
+
+\newpage
+
+\section{Cast and Characters (cont.)}
+
+\subsection{Beta process} 
+
+a \emph{random hazard measure}.
+
+\ \\
+\begin{tabular}{cc}
+%\multirow{4}{*}{\includegraphics[width=.43\linewidth]{attributes}}
+&$B\{\text{has Tail}\} = .99$ \\
+&$B\{\text{has Stripes}\} = .95$ \\
+&$B\{\text{has Legs}\} = .999$\\
+&$B\{\text{has Horns}\} = .001$
+\end{tabular}
+
+\vspace{1em}
+\begin{definition}[notation]
+Write $B \dist \BPLAW(c,B_0)$ when $B$ is a 
+Beta process with 
+\emph{mean} (aka base measure) $\EE B = B_0$ 
+and \emph{concentration} $c>0$.
+\end{definition}
+
+\begin{prop}%[properties]
+Let $B \dist \BPLAW(c,B_0)$, $B_0 \in \Measures \borelspace$.
+\begin{enumerate}
+
+\item $B$ is completely random and a.s.\ discrete; 
+\item $B = \sum_{n=1}^\infty p_n \delta_{\gamma_n}$ for \hfill \\
+\hfill $\process p \Nats$ in $[0,1]$ and $\process \gamma \Nats$ in $\bspace$
+\vspace{-0.5em}
+
+\ \\
+Let $\mathcal D = \{ s \in \bspace : B_0\{s\} \}$.
+\vspace{.5em}
+
+
+\item 
+$B\{s\} \dist \Beta(c B_0\{s\},c(1-B_0\{s\}))$;
+
+\item
+If $B_0$ is finite and continuous on $A \in \bsa$, \\
+then $B = \sum_{(p,s) \in \eta} p \delta_s$ where $\eta$ is a Poisson process on $(0,1] \times A$ with mean \\ $c p^{-1} (1-p)^{c-1} dp B_0(ds)$.
+
+\item 
+Conjugate to $\BePLAW$.
+
+\end{enumerate}
+\end{prop}
+
+\begin{thm}[{\citep{Hjort90,Kim99}}]
+$\process X \Nats \distiid \BePLAW(B)$ then
+$B \given X_{[n]} \dist \BPLAW(c+n,B_n)$
+where \\
+$B_n = \frac c {c+n} B_0 + \frac 1 {c+n} \sum_{j\le n} X_j$.
+Thus\\
+$X_{n+1} \given X_{[n]} \dist \BePLAW(\frac c {c+n} B_0 + \frac 1 {c+n} \sum_{j\le n} X_j)$
+\end{thm}
+
+\hrule
+\subsection{Indian Buffet Process}\hfill\\
+an \emph{exchangeable sequence of sets}\vspace{-.3em}
+
+\ \\
+\noindent
+Let $\bar B_0$ be a continuous \emph{distribution} on $\borelspace$.\\
+Let $\process \gamma {\Nats} \distiid \bar B_0$ and $\alpha,c \in (0,\infty)$.
+\begin{enumerate}
+
+\item 1\textsuperscript{st} customer tries $K_1 \sim \Poisson(\alpha)$ dishes.
+\\i.e., $X_1 = \sum_{j=1}^{K_1} \delta_{\gamma_{j}}$. 
+\\\emph{Note:} $X_1 \dist \BePLAW(B_0)$, where $B_0 = \alpha \bar B_0$.
+
+\item $n+1$\textsuperscript{st} customer tries $K_n \dist \Poisson(\alpha \frac c {c+n})$ new dishes and tries every dish $s \in \bspace$ independently with probability 
+\[
+\frac {\text{\# prev.\ customers had $s$}} {c+n} = \frac 1 {c+n} \sum_{j \le n} X_j\{s\}. \nonumber
+\]
+
+\end{enumerate}
+
+\begin{definition}[notation] $\process X \Nats \sim \IBPLAW(c,B_0)$.
+\end{definition}
+\begin{thm}[{\citep{GG05,GG06}}]
+$\process X \Nats$ is exchangeable.
+\end{thm}
+
+\begin{thm}[{\citep{Thibaux2007}}]
+There exists $B \dist \BPLAW(c,B_0)$ such that
+$\process X \Nats \given B \distiid \BePLAW(B)$.
+\end{thm}
+
+\newpage
+
+\section{Conclusions}
+
+\begin{enumerate}\itemsep=4pt% little bit more separation
+\item Demonstrated use of amsart documentclass for making presentations.
+\item Showed some material presented in this format, including some tikz-graph figures.
+\end{enumerate}
+
+\ \\
+
+\subsection{Preprint available}
+\hfill\\
+See my website: \url{danroy.org}
+\\ or ArXiv: \url{http://arxiv.org/abs/1005.3014}
+\vfill
+
+\begin{tiny}
+\bibliographystyle{alpha} 
+\bibliography{biblio}
+\end{tiny}
+
+\end{document}

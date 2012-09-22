@@ -1,0 +1,37 @@
+%!TEX encoding = UTF-8 Unicode
+
+%% Note: the correct use of this file requires that you replace several numbers matching
+%% your actual slides.  I've not tested more than 10 slides.  I suspect 16 or 32 may be the maximum
+%% before you need to split them over several logical pages.
+
+%% To view the wide slides produced, use a program like Adobe Reader.  In Full Screen mode, press Ctrl+Y, and choose "Fit Height".
+
+% Author(s): Daniel Roy
+% Website: danroy.org
+% License: Public Domain
+% I encourage people to build on this idea, while acknowledging earlier contributions.
+
+\documentclass[reqno,oneside,onecolumn,8pt]{amsart}
+\usepackage[utf8]{inputenc} 
+\usepackage{pdfpages}
+
+% Page structure
+\usepackage{calc}				% working with lengths, counters etc.
+\usepackage[
+	paperwidth=768mm, % 6 x 128mm,  here "6" should be the # of pages in your slides, then multiply!
+	paperheight=96mm,
+	%includeheadfoot,%
+	top=3.5mm,%
+	bottom=3.5mm,%
+	%left=5.5mm,%
+	%right=5.5mm,%
+	left=1.75mm,%
+	right=1.75mm,%
+	headsep=6.5mm,%
+	footskip=8.5mm%
+	]{geometry}						% set page layout parameters
+
+\begin{document}
+% replace "6" below with the number of pages in your slides
+\includepdf[nup=6x1,pages={1-6},frame=true]{slides.pdf}
+\end{document}
