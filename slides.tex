@@ -5,7 +5,9 @@
 % License: Public Domain
 % I encourage people to build on this idea, while acknowledging earlier contributions.
 
-\documentclass[reqno,oneside,twocolumn,8pt]{amsart}
+% This .tex file produces a PDF document with two slides per page.  This file can then be combined into a single horizontal slide using the make-horizontal.tex file.  Some configuration of this second .tex file is necessary.  See the .tex for details.
+
+\documentclass[reqno,oneside,twocolumn,10pt]{amsart}
 \usepackage[utf8]{inputenc} 
 \usepackage{amsmath, amssymb, bm}
 \usepackage[usenames,dvipsnames]{xcolor}
@@ -38,8 +40,8 @@
 
 %% change the page size to match projector dimensions
 \usepackage[
-	paperwidth=128mm, %% these are Beamer's default dimensions.   
-	paperheight=96mm, %% some newer projectors are more widescreen
+	paperwidth=160mm, %% these are Beamer's default dimensions.   
+	paperheight=120mm, %% some newer projectors are more widescreen
 	%includeheadfoot, %% hiding header/footer for more screen space.
 	top=3.5mm, %% these margins can be trimmed further, if necessary.
 	bottom=3.5mm,

@@ -1,10 +1,8 @@
 %!TEX encoding = UTF-8 Unicode
 
-%% Note: the correct use of this file requires that you replace several numbers matching
-%% your actual slides.  I've not tested more than 10 slides.  I suspect 16 or 32 may be the maximum
-%% before you need to split them over several logical pages.
+%% Note: the correct use of this file requires that you specify below the number of pages in the presentation and the the page dimensions.  I've not tested more than 26 slides.  I suspect that the approach may break the pdfpages package or Abobe Acrobat at some point.
 
-%% To view the wide slides produced, use a program like Adobe Reader.  In Full Screen mode, press Ctrl+Y, and choose "Fit Height".
+%% To view the wide slides produced, use a program like Adobe Reader.  In Full Screen mode, press Ctrl+Y to change the zoom level, and choose "Fit Height".
 
 % Author(s): Daniel Roy
 % Website: danroy.org
@@ -13,25 +11,26 @@
 
 \documentclass[reqno,oneside,onecolumn,8pt]{amsart}
 \usepackage[utf8]{inputenc} 
-\usepackage{pdfpages}
+\usepackage{pdfpages,calc}
 
-% Page structure
-\usepackage{calc}				% working with lengths, counters etc.
+\newcounter{numpages}
+\setcounter{numpages}{6} % set the number of pages...
+\newcounter{pagewidth}
+\setcounter{pagewidth}{80} % and their width in 'mm'
+\newcounter{totalwidth}
+\setcounter{totalwidth}{\thenumpages*\thepagewidth}
+
 \usepackage[
-	paperwidth=768mm, % 6 x 128mm,  here "6" should be the # of pages in your slides, then multiply!
-	paperheight=96mm,
-	%includeheadfoot,%
+	paperwidth={\thetotalwidth}mm, % 24 x 64mm,
+	paperheight=120mm,
 	top=3.5mm,%
 	bottom=3.5mm,%
-	%left=5.5mm,%
-	%right=5.5mm,%
 	left=1.75mm,%
 	right=1.75mm,%
 	headsep=6.5mm,%
 	footskip=8.5mm%
-	]{geometry}						% set page layout parameters
-
+	]{geometry}
+	
 \begin{document}
-% replace "6" below with the number of pages in your slides
-\includepdf[nup=6x1,pages={1-6},frame=true]{slides.pdf}
+\includepdf[nup={\thenumpages}x1,pages={1-\thenumpages},frame=true]{slides.pdf}
 \end{document}
